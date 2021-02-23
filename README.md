@@ -6,7 +6,7 @@ Maybe the job could be done easier with just Excels own tools. But i thinks its 
 
 
 The entries will be sorted to the right month. Also it will be checked, that only one entry for salary per month exist.
-For the expenses a commentar and the time + date will be saved.
+For the expenses a commentar and the time + date will be added.
 ![alt text](https://github.com/SvenMuth/Xlsx-Account-Book/blob/main/pictures/excel.PNG?raw=true)
 
 At first step a month has to been choosen. After this it is possible to change the month.
