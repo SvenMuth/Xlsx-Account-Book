@@ -10,7 +10,7 @@ For the expenses a commentar and the time + date will be added.
 ![alt text](https://github.com/SvenMuth/Xlsx-Account-Book/blob/main/pictures/excel.PNG?raw=true)
 
 At first step a month has to been choosen. After this it is possible to change the month.
-All data of the entries will be saved in a sqlite database.
+All entries will be saved in a sqlite database.
 ![alt text](https://github.com/SvenMuth/Xlsx-Account-Book/blob/main/pictures/months.PNG?raw=true)
 
 In the menue you can select between: Salary, Expenses, Change month and delete the database. 
