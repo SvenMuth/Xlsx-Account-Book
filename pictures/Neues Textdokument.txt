@@ -1,2 +1,0 @@
-In order to learn the fundaments of python i started writing this program. It could be seen as my first "real" program. 
-Maybe the job could be done easier with just Excels own tools. But i thinks its also a cool way to keep track on expenses and income per month.
