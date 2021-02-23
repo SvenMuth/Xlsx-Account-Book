@@ -8,8 +8,8 @@ from functions import *
 
 # Function to randomly write a salary per months and write entries in different cost types with different values
 # For testing remove hashtag, also remove the marked hashtags below
-from testing import test
-repeat_test = 100
+# from testing import test
+# repeat_test = 100
 
 # Create list for different months and position in Xlsx-Document [col, row, month, index]
 months = [[0, 2, "January", 0], [0, 3, "February", 1], [0, 4, "March", 2], [0, 5, "April", 3],
@@ -57,8 +57,8 @@ f_red = workbook.add_format({'bold': False, 'font_color': '#DF0101'})
 f_orange = workbook.add_format({'bold': False, 'font_color': '#F36105'})
 
 # For testing remove hashtags
-test(months, costs_list, repeat_test)
-"""
+# test(months, costs_list, repeat_test)
+# """
 
 # Chose class
 select_class = show_classes(chosen_month_number)
@@ -194,7 +194,7 @@ while select_class != "0":
         select_class = show_classes(chosen_month_number)
 
 # For testing remove hashtag
-"""
+# """
 # Get all entries from database
 cdata = get_data_sql()
 
