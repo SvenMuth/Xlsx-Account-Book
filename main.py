@@ -80,7 +80,7 @@ while select_class != "0":
 
             # Write information's about your salary into database
             datasql = ("1", chosen_month_name, income_month, 0, "0", "0")
-            insert(datasql)
+            insert_sql(datasql)
 
         else:
             # Check if there is already an entry for the chosen month
@@ -92,7 +92,7 @@ while select_class != "0":
                     # Set a new income for this month
                     income_month = int(input("Please insert new Salary for " + chosen_month_name + ":"))
                     # Update old entry
-                    update_salary_entry_sql(income_month, chosen_month_name)
+                    update_salary_entry(income_month, chosen_month_name)
                     print("Salary was updated")
                     print("")
 
@@ -110,7 +110,7 @@ while select_class != "0":
 
                 # Write information's about your salary into database
                 datasql = ("1", chosen_month_name, income_month, 0, "0", "0")
-                insert(datasql)
+                insert_sql(datasql)
 
         select_class = show_classes(chosen_month_number)
 
@@ -140,7 +140,7 @@ while select_class != "0":
 
             # Write information's about your costs into database
             datasql = ("2", chosen_month_name, 0, expanses_costs, category_expanses, commentary)
-            insert(datasql)
+            insert_sql(datasql)
 
         else:
             print("Input is invalid")
@@ -170,9 +170,16 @@ while select_class != "0":
 
         #  Change between classes
         select_class = show_classes(chosen_month_number)
-
-    # Delete database
+    
+    # Delete all entries from the chosen month
     elif select_class == "4":
+        delete_entry(chosen_month_name)
+        print("All entries for " + chosen_month_name + " where deleted")
+
+        select_class = show_classes(chosen_month_number)
+        
+    # Delete database
+    elif select_class == "5":
         reset = str(input("Delete the previous database? [y/n]"))
         if reset == "y":
             # Delete file
@@ -418,7 +425,7 @@ else:
             else:
                 worksheet.write_number(t7 + 3, row, difference_per_month[index], f_red)
 
-# Print entries legible in terminal, use lists, which are created out of the database and split by type
+# Print entries from database legible in terminal
 for salary_month in list_salary:
     print("Salary in " + salary_month[1] + " was: " + str(salary_month[2]) + "€")
 

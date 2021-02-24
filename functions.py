@@ -17,10 +17,11 @@ def show_classes(chosen_month_number):
         print("Salary [1]")
         print("Costs [2]")
         print("Change month [3]")
-        print("Delete all entries in Database [4]")
+        print("Delete all entries for the chosen month [4]")
+        print("Delete all entries in Database [5]")
         print("Exit and write to Worksheet [0]")
         print("")
-        select_class = str(input("Please chose a class: [1, 2, 3, 4, 0] "))
+        select_class = str(input("Please chose a class: [1, 2, 3, 4, 5, 0] "))
         return select_class
 
 
@@ -45,7 +46,7 @@ def database():
     conn.close()
 
 
-def insert(datasql):
+def insert_sql(datasql):
     conn = sqlite3.connect(r"database\database.db")
     c = conn.cursor()
 
@@ -93,13 +94,25 @@ def get_salary_month():
     return set_salary
 
 
-def update_salary_entry_sql(income_month, chosen_month_name):
+def update_salary_entry(income_month, chosen_month_name):
     conn = sqlite3.connect(r"database\database.db")
     c = conn.cursor()
 
     # Update the old salary entry
     sql_update_query = "UPDATE data SET salary=? WHERE month=?"
     c.execute(sql_update_query, (income_month, chosen_month_name))
+
+    conn.commit()
+    conn.close()
+
+
+def delete_entry(chosen_month_name):
+    conn = sqlite3.connect(r"database\database.db")
+    c = conn.cursor()
+
+    # Update the old salary entry
+    sql_delete_query = "DELETE from data WHERE month=?"
+    c.execute(sql_delete_query, (chosen_month_name, ))
 
     conn.commit()
     conn.close()

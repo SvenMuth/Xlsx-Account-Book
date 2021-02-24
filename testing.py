@@ -9,7 +9,6 @@ def test(months, costslist, repeat):
 
     # Delete Database
     if os.path.exists(r"database\database.db"):
-        # Delete file
         os.remove(r"database\database.db")
 
     # Initial new database
@@ -20,7 +19,7 @@ def test(months, costslist, repeat):
         list_of_months.append(month)
         income = random.randint(2500, 3000)
         datasql = ("1", month, income, 0, "0", "0")
-        insert(datasql)
+        insert_sql(datasql)
 
     # Create a numerous variety of expanses and write them to database
     i = 0
@@ -30,8 +29,9 @@ def test(months, costslist, repeat):
         expanses_costs = random.randint(0, 500)
 
         datasql = ("2", chosen_month_name, 0, expanses_costs, category_expanses, "X")
-        insert(datasql)
+        insert_sql(datasql)
         i += 1
+
 
 
 
