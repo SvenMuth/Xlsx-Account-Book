@@ -21,4 +21,4 @@ At the end of the program, all entries will be shown. Also the workbook will be 
 
 I will work on this project to include more features and remove bugs if the occur.
 I also wrote a test program, to write entries to the database. 
-The menue will be skipped, when the test program is active.
+The menue have to be skipped, when the test program is active.
