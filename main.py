@@ -3,6 +3,7 @@ import os
 import numpy as np
 import subprocess as sp
 from datetime import datetime
+from pyfiglet import Figlet
 
 from functions import *
 
@@ -59,6 +60,10 @@ f_orange = workbook.add_format({'bold': False, 'font_color': '#F36105'})
 # For testing remove hashtags
 # test(months, costs_list, repeat_test)
 # """
+
+# Print account book via figlet plugin
+format_figlet = Figlet(font="slant")
+print(format_figlet.renderText('Account-Book'))
 
 # Chose class
 select_class = show_classes(chosen_month_number)
