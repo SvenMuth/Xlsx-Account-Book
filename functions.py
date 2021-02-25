@@ -6,7 +6,7 @@ def show_classes(chosen_month_number):
     # At first let the user chose a month to make entries
     if chosen_month_number == "":
         print("At first a month has to be chosen:")
-        print("")
+        print()
         select_class = "3"
         return select_class
 
@@ -20,7 +20,7 @@ def show_classes(chosen_month_number):
         print("Delete all entries for the chosen month [4]")
         print("Delete all entries in Database [5]")
         print("Exit and write to Worksheet [0]")
-        print("")
+        print()
         select_class = str(input("Please chose a class: [1, 2, 3, 4, 5, 0] "))
         return select_class
 

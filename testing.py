@@ -25,12 +25,17 @@ def test(months, costslist, repeat):
     i = 0
     while i < repeat:
         chosen_month_name = list_of_months[random.randint(0, 11)]
-        category_expanses = costslist[random.randint(0, 6)][0]
+        category_expanses = costslist[random.randint(0, 6)]
         expanses_costs = random.randint(0, 500)
 
         datasql = ("2", chosen_month_name, 0, expanses_costs, category_expanses, "X")
         insert_sql(datasql)
         i += 1
+
+
+
+
+
 
 
 

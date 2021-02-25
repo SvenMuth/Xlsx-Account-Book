@@ -18,8 +18,7 @@ months = [[0, 2, "January", 0], [0, 3, "February", 1], [0, 4, "March", 2], [0, 5
           [0, 10, "September", 8], [0, 11, "October", 9], [0, 12, "November", 10], [0, 13, "December", 11]]
 
 # Create list for costs and index
-costs_list = [['Rent', '6'], ['Credit', '7'], ['Car', '8'], ['Foods', '9'],
-              ['Amazon', '10'], ['Sport', '11'], ['Other', '12']]
+costs_list = ["Rent", "Credit", "Car", "Foods", "Amazon", "Sport", "Other"]
 
 # Create empty lists which are later needed
 # Lists to sort the database in categories
@@ -99,12 +98,12 @@ while select_class != "0":
                     # Update old entry
                     update_salary_entry(income_month, chosen_month_name)
                     print("Salary was updated")
-                    print("")
+                    print()
 
                 # Let the old entry and jump in main loop
                 elif replace_entry == "n":
                     print("Salary wasn't updated")
-                    print("")
+                    print()
 
                 else:
                     print("Input invalid")
@@ -124,7 +123,7 @@ while select_class != "0":
 
         # List cost categories
         entry = 1
-        for cost, index in costs_list:
+        for cost in costs_list:
             print(str(entry) + ". " + cost)
             entry += 1
 
@@ -133,11 +132,11 @@ while select_class != "0":
 
         if 0 < category_chosen <= 8:
 
-            print("You chose " + costs_list[category_chosen - 1][0])
+            print("You chose " + costs_list[category_chosen - 1])
             expanses_costs = int(input("Please input the costs: "))
 
             # Get the category
-            category_expanses = costs_list[category_chosen - 1][0]
+            category_expanses = costs_list[category_chosen - 1]
 
             # Write a commentary to your entry and append the right time of day and date
             commentary = str(input("Please write a commentary to the expense:"))
@@ -162,13 +161,13 @@ while select_class != "0":
             print(str(number) + ": " + month)
             number += 1
 
-        print("")
+        print()
         chosen_month_number = int(input("Please select a month: [1-12] "))
 
         if 0 < chosen_month_number <= 12:
             chosen_month_name = months[chosen_month_number - 1][2]
             print("You have chosen " + chosen_month_name)
-            print("")
+            print()
 
         else:
             print("Input is invalid")
@@ -190,7 +189,10 @@ while select_class != "0":
             # Delete file
             os.remove(r"database\database.db")
             print("Database was removed")
-            print("")
+            print()
+
+            # Create a new table
+            database()
 
         elif reset == "n":
             print("Database wasn't deleted")
@@ -220,22 +222,22 @@ for element in cdata:
 
 # Take the costs an append them to the different list which are equal to the category
 for expense in list_expenses:
-    if expense[4] == costs_list[0][0]:
+    if expense[4] == costs_list[0]:
         rent.append(expense)
 
-    elif expense[4] == costs_list[1][0]:
+    elif expense[4] == costs_list[1]:
         credit.append(expense)
 
-    elif expense[4] == costs_list[2][0]:
+    elif expense[4] == costs_list[2]:
         car.append(expense)
 
-    elif expense[4] == costs_list[3][0]:
+    elif expense[4] == costs_list[3]:
         foods.append(expense)
 
-    elif expense[4] == costs_list[4][0]:
+    elif expense[4] == costs_list[4]:
         amazon.append(expense)
 
-    elif expense[4] == costs_list[5][0]:
+    elif expense[4] == costs_list[5]:
         sport.append(expense)
 
     else:
@@ -268,7 +270,7 @@ for salary_month in list_salary:
             worksheet.write_number(val, row, salary_month[2], f_grye)
 
 # Sort costs by months and write them in the right place in the Xlsx document
-worksheet.write(5, 1, costs_list[0][0], cell_format11)
+worksheet.write(5, 1, costs_list[0], cell_format11)
 number_a = [5] * 12
 
 for element in rent:
@@ -287,10 +289,10 @@ t1 = max(number_a)
 # Check if an entry was made in the last category, otherwise add the value 1 to the start position
 if t1 == 5:
     t1 += 1
-    worksheet.write(t1, 1, costs_list[1][0], cell_format11)
+    worksheet.write(t1, 1, costs_list[1], cell_format11)
 
 else:
-    worksheet.write(t1, 1, costs_list[1][0], cell_format11)
+    worksheet.write(t1, 1, costs_list[1], cell_format11)
 
 number_b = [t1] * 12
 for element in credit:
@@ -305,10 +307,10 @@ t2 = max(number_b)
 
 if t1 == t2:
     t2 += 1
-    worksheet.write(t2, 1, costs_list[2][0], cell_format11)
+    worksheet.write(t2, 1, costs_list[2], cell_format11)
 
 else:
-    worksheet.write(t2, 1, costs_list[2][0], cell_format11)
+    worksheet.write(t2, 1, costs_list[2], cell_format11)
 
 number_c = [t2] * 12
 for element in car:
@@ -323,10 +325,10 @@ t3 = max(number_c)
 
 if t2 == t3:
     t3 += 1
-    worksheet.write(t3, 1, costs_list[3][0], cell_format11)
+    worksheet.write(t3, 1, costs_list[3], cell_format11)
 
 else:
-    worksheet.write(t3, 1, costs_list[3][0], cell_format11)
+    worksheet.write(t3, 1, costs_list[3], cell_format11)
 
 number_d = [t3] * 12
 for element in foods:
@@ -341,10 +343,10 @@ t4 = max(number_d)
 
 if t3 == t4:
     t4 += 1
-    worksheet.write(t4, 1, costs_list[4][0], cell_format11)
+    worksheet.write(t4, 1, costs_list[4], cell_format11)
 
 else:
-    worksheet.write(t4, 1, costs_list[4][0], cell_format11)
+    worksheet.write(t4, 1, costs_list[4], cell_format11)
 
 number_e = [t4] * 12
 for element in amazon:
@@ -359,10 +361,10 @@ t5 = max(number_e)
 
 if t4 == t5:
     t5 += 1
-    worksheet.write(t5, 1, costs_list[5][0], cell_format11)
+    worksheet.write(t5, 1, costs_list[5], cell_format11)
 
 else:
-    worksheet.write(t5, 1, costs_list[5][0], cell_format11)
+    worksheet.write(t5, 1, costs_list[5], cell_format11)
 
 number_f = [t5] * 12
 for element in sport:
@@ -377,10 +379,10 @@ t6 = max(number_f)
 
 if t5 == t6:
     t6 += 1
-    worksheet.write(t6, 1, costs_list[6][0], cell_format11)
+    worksheet.write(t6, 1, costs_list[6], cell_format11)
 
 else:
-    worksheet.write(t6, 1, costs_list[6][0], cell_format11)
+    worksheet.write(t6, 1, costs_list[6], cell_format11)
 
 number_g = [t6] * 12
 for element in other:
