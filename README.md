@@ -1,7 +1,8 @@
 # Xlsx-Account-Book
-Just a fun project to sort expenses per month in an excel sheet via python (It could contain bugs which i haven't found yet)
+Just a fun project to sort expenses per month in an excel sheet via python 
+(It could contain bugs which i haven't found yet)
 
-In order to learn the fundaments of python i started writing this program. It could be seen as my first proper project. 
+In order to learn the fundamentals of python i started writing this program. It could be seen as my first proper project. 
 Maybe the job could be done easier with just Excels own tools. But i thinks its also a cool way to keep track on expenses and income per month.
 
 The entries will be sorted to the right month. Also it will be checked, that only one entry for salary per month exist.
