@@ -5,8 +5,8 @@ def show_classes(chosen_month_number):
 
     # At first let the user chose a month to make entries
     if chosen_month_number == 0:
-        print("At first a month has to be chosen:")
-        print()
+        print("At first a month has to be chosen:\n")
+
         select_class = "3"
         return select_class
 

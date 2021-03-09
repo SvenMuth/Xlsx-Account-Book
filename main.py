@@ -11,7 +11,7 @@ from functions import *
 # Function to randomly write a salary per months and write entries in different cost types with different values
 # For testing remove hashtag, also remove the marked hashtags below
 # from testing import test
-# repeat_test = 100
+# repeat_test = 20
 
 # Initial new database
 database()
@@ -21,9 +21,8 @@ months = [[0, 2, "January", 0], [0, 3, "February", 1], [0, 4, "March", 2], [0, 5
           [0, 6, "May", 4], [0, 7, "June", 5], [0, 8, "July", 6], [0, 9, "August", 7],
           [0, 10, "September", 8], [0, 11, "October", 9], [0, 12, "November", 10], [0, 13, "December", 11]]
 
-# Create list for categories and a updated list for reference
+# Create list for categories
 costs_list = ["Rent", "Credit", "Car", "Foods", "Amazon", "Sport", "Other"]
-costs_list_updated = []
 
 # Get category entries from database
 category_sql = get_category_sql()
@@ -34,10 +33,9 @@ if not category_sql:
         datasql = (0, "0", 0, 0, cost, "0")
         insert_sql(datasql)
 else:
+    costs_list.clear()
     for category in category_sql:
-        costs_list_updated.append(category[0])
-
-costs_list = costs_list_updated
+        costs_list.append(category[0])
 
 # Create variables which are later needed
 chosen_month_name, replace_entry = "", ""
@@ -482,17 +480,17 @@ for cost in costs_list:
                 startpos = max(startposlist)
 
     else:
-        # Check if there are any entries for the first category
-        if startpos != 5:
-            # Otherwise use the variable to check if there any entries
-            startposold = startpos
-
         if startpos == startposold:
             startpos += 1
             worksheet.write(startpos, 1, cost, cell_format11)
 
         else:
             worksheet.write(startpos, 1, cost, cell_format11)
+
+        # Check if there are any entries for the first category
+        if startpos != 5:
+            # Otherwise use the variable to check if there any entries
+            startposold = startpos
 
         startposlist = [startpos] * 12
         for cost_sql in category_data:
