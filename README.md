@@ -8,7 +8,7 @@ In the terminal new entries can be created, the month can be changed during the 
 Further option is to delete specific entries, all entries for a month or the whole database.
 The entries from the user will be sorted to the right month. Also, it will be checked, that only one entry for salary per month exist.
 For the expenses a commentary and the time + date will be added.
-For the input of the money in salary and costs are many formats accepted.
+For the input of the money for salary and costs are many formats accepted.
 For example: 23, 23., 23.0 or 23.00 are valid formats. The input will be formatted automatically and an euro symbol will be added.
 
 ![alt text](https://github.com/SvenMuth/Xlsx-Account-Book/blob/main/pictures/excel.PNG?raw=true)
