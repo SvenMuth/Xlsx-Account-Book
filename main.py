@@ -6,12 +6,14 @@ import subprocess as sp
 from terminaltables import AsciiTable
 from datetime import datetime
 from pyfiglet import Figlet
+from decimal import Decimal
 from functions import *
+
 
 # Function to randomly write a salary per months and write entries in different cost types with different values
 # For testing remove hashtag, also remove the marked hashtags below
 # from testing import test
-# repeat_test = 20
+# repeat_test = 0
 
 # Initial new database
 database()
@@ -30,7 +32,7 @@ category_sql = get_category_sql()
 # Check if there any entries, otherwise write the standard to database
 if not category_sql:
     for cost in costs_list:
-        datasql = (0, "0", 0, 0, cost, "0")
+        datasql = (0, "0", "0", "0", cost, "0")
         insert_sql(datasql)
 else:
     costs_list.clear()
@@ -92,8 +94,7 @@ print(format_figlet.renderText('Account-Book'))
 select_class = show_classes(chosen_month_number)
 
 # Loop for main program
-while select_class != "0":
-
+while True:
     # Create Table if not already exist
     database()
 
@@ -104,16 +105,15 @@ while select_class != "0":
 
         # Check if set with months is empty --> first entry for salary
         if len(set_salary) == 0:
-            try:
-                income_month = int(input("Please insert salary for " + chosen_month_name + ":"))
+            income_month = str(input("Please insert salary for " + chosen_month_name + ":"))
+            income_month = check_number_input(income_month)
 
+            if income_month != "0":
                 # Write information's about your salary into database
                 id_item += 1
-                datasql = (id_item, chosen_month_name, income_month, 0, "0", "0")
+                datasql = (id_item, chosen_month_name, income_month, "0", "0", "0")
                 insert_sql(datasql)
-
-            except ValueError:
-                print("Invalid input\n")
+                print("Salary was updated\n")
 
         else:
             # Check if there is already an entry for the chosen month
@@ -121,15 +121,15 @@ while select_class != "0":
 
                 replace_entry = str(input("\nShould the entry for " + chosen_month_name + " be replaced? [y, n]"))
                 if replace_entry == "y":
-                    try:
-                        # Set a new income for this month
-                        income_month = int(input("Please insert new Salary for " + chosen_month_name + ":"))
+
+                    # Set a new income for this month
+                    income_month = str(input("Please insert new Salary for " + chosen_month_name + ":"))
+                    income_month = check_number_input(income_month)
+
+                    if income_month != "0":
                         # Update old entry
                         update_salary_sql(income_month, chosen_month_name)
-
                         print("Salary was updated\n")
-                    except ValueError:
-                        print("Invalid input\n")
 
                 # Let the old entry and jump in main loop
                 elif replace_entry == "n":
@@ -140,15 +140,14 @@ while select_class != "0":
 
             # No entry found so just write a new entry for this month
             else:
-                try:
-                    income_month = int(input("Please insert salary for " + chosen_month_name + ":"))
+                income_month = str(input("Please insert salary for " + chosen_month_name + ": "))
+                income_month = check_number_input(income_month)
 
+                if income_month != "0":
                     # Write information's about your salary into database
                     id_item += 1
-                    datasql = (id_item, chosen_month_name, income_month, 0, "0", "0")
+                    datasql = (id_item, chosen_month_name, income_month, "0", "0", "0")
                     insert_sql(datasql)
-                except ValueError:
-                    print("Invalid input\n")
 
         select_class = show_classes(chosen_month_number)
 
@@ -165,25 +164,32 @@ while select_class != "0":
 
         try:
             category_chosen = int(input("Please chose a category: [1 - " + str(len(costs_list)) + "] "))
+            if category_chosen == 0:
+                print("Invalid input\n")
 
-            # Get the category
-            category_expanses = costs_list[category_chosen - 1]
-            expanses_costs = int(input("Please input the costs for [" + category_expanses + "]: "))
+            else:
+                # Get the category
+                category_expanses = costs_list[category_chosen - 1]
+                expanses_costs = str(input("Please input the costs for " + category_expanses + ": "))
+                expanses_costs = check_number_input(expanses_costs)
 
-            # Write a commentary to your entry and append the right time of day and date
-            commentary = str(input("Please write a commentary to the expense: "))
-            print()
-            commentary += "\nCreated on:\n" + datetime.now().strftime("%d.%m.%y - %H:%M")
+                if expanses_costs != "0":
+                    id_item += 1
 
-            # Write information's about your costs into database
-            datasql = (id_item, chosen_month_name, 0, expanses_costs, category_expanses, commentary)
-            insert_sql(datasql)
+                    # Write a commentary to your entry and append the right time of day and date
+                    commentary = str(input("Please write a commentary to the expense: "))
+                    print()
+                    commentary += "\nCreated on:\n" + datetime.now().strftime("%d.%m.%y - %H:%M")
 
-        except ValueError:
-            print("Invalid input\n")
+                    # Write information's about your costs into database
+                    datasql = (id_item, chosen_month_name, "0", expanses_costs, category_expanses, commentary)
+                    insert_sql(datasql)
 
         except IndexError:
             print("Input is out of range\n")
+
+        except ValueError:
+            print("Invalid input\n")
 
         #  Change between classes
         select_class = show_classes(chosen_month_number)
@@ -199,8 +205,12 @@ while select_class != "0":
 
         try:
             chosen_month_number = int(input("\nPlease select a month: [1-12] "))
-            chosen_month_name = months[chosen_month_number - 1][2]
-            print("You have chosen " + chosen_month_name + "\n")
+            if chosen_month_number == 0:
+                print("Invalid Input\n")
+
+            else:
+                chosen_month_name = months[chosen_month_number - 1][2]
+                print("You have chosen " + chosen_month_name + "\n")
 
         except ValueError:
             chosen_month_number = 0
@@ -220,15 +230,22 @@ while select_class != "0":
         chosen_category = str(input("Please chose: [1, 2]"))
         if chosen_category == "1":
             new_category = str(input("\nPlease write a new category you want to add: "))
+            new_category = new_category.strip()
 
-            # Check if category already exist and add to database
-            if new_category not in costs_list:
-                datasql = (0, "0", 0, 0, new_category, "0")
-                insert_sql(datasql)
-                costs_list.append(new_category)
+            if new_category != "":
+                # Check if category already exist and add to database
+                if new_category not in costs_list:
+                    datasql = (0, "0", "0", "0", new_category, "0")
+                    insert_sql(datasql)
+                    costs_list.append(new_category)
+
+                    print("New category was saved.")
+
+                else:
+                    print("\nCategory already exists.")
 
             else:
-                print("\nCategory already exists.")
+                print("Invalid input\n")
 
         elif chosen_category == "2":
 
@@ -242,7 +259,7 @@ while select_class != "0":
                 # Delete a category and all entries which it belongs to
                 delete_category_sql(costs_list, delete_category)
                 costs_list.remove(costs_list[delete_category - 1])
-                print()
+                print("Category [" + costs_list[delete_category - 1] + "] was successfully deleted.")
 
             except ValueError:
                 print("Invalid input\n")
@@ -261,7 +278,7 @@ while select_class != "0":
         print("Delete an entry from costs [2]")
 
         # Displays the salary entries with an id
-        choice = str(input("Please chose: [1, 2]"))
+        choice = str(input("Please chose: [1, 2] "))
         if choice == "1":
             salary_data = get_salary_sql()
 
@@ -269,13 +286,12 @@ while select_class != "0":
             if len(salary_data) == 0:
                 print("No entries for salary yet.\n")
 
-                select_class = show_classes(chosen_month_number)
-
             else:
-                table_data = [['ID', 'Month', 'Salary in €']]
+                table_data = [['ID', 'Month', 'Salary']]
 
                 for salary in salary_data:
-                    table_data.append([salary[0], salary[1], salary[2]])
+                    var_digit = digit_correct(salary[2])
+                    table_data.append([salary[0], salary[1], var_digit])
 
                 table = AsciiTable(table_data)
                 print(table.table)
@@ -285,13 +301,14 @@ while select_class != "0":
 
                     # Check if an entry with this ID exist
                     id_item = check_id_sql(select)
+
                     if id_item is None:
                         print("Entry does not exist.")
 
                     else:
                         # Delete the entry
                         delete_id_sql(select)
-                        print("Entry was successfully deleted")
+                        print("Entry was successfully deleted\n")
 
                 except ValueError:
                     print("Invalid input\n")
@@ -305,13 +322,13 @@ while select_class != "0":
                 print("No entries for costs yet.\n")
 
             else:
-                table_data = [['ID', 'Month', 'Costs in €', 'Category', 'Comment']]
+                table_data = [['ID', 'Month', 'Costs', 'Category', 'Comment']]
 
                 for cost in costs_list:
                     category_data = get_expense_by_category(cost)
                     for cost_sql in category_data:
-
-                        table_data.append([cost_sql[0], cost_sql[1], cost_sql[3], cost_sql[4], cost_sql[5]])
+                        var_digit = digit_correct(cost_sql[3])
+                        table_data.append([cost_sql[0], cost_sql[1], var_digit, cost_sql[4], cost_sql[5]])
 
                 table = AsciiTable(table_data)
                 print(table.table)
@@ -332,7 +349,7 @@ while select_class != "0":
                     print("Invalid input\n")
 
         else:
-            print("Invalid Input")
+            print("Invalid Input\n")
 
         select_class = show_classes(chosen_month_number)
 
@@ -363,15 +380,15 @@ while select_class != "0":
             # Create a new table
             database()
 
-            reset_categories = ""
-            while reset_categories != "0":
-                reset_categories = str(input("Do you want to reset the categories too? [y, n] "))
+            reset_categories = str(input("Do you want to reset the categories too? [y, n] "))
+            while True:
+
                 if reset_categories == "y":
 
                     # Write standard categories to database
                     costs_list = ["Rent", "Credit", "Car", "Foods", "Amazon", "Sport", "Other"]
                     for cost in costs_list:
-                        datasql = (0, "0", 0, 0, cost, "0")
+                        datasql = (0, "0", "0", "0", cost, "0")
                         insert_sql(datasql)
 
                     print("Operation successfully\n")
@@ -379,11 +396,14 @@ while select_class != "0":
 
                 elif reset_categories == "n":
                     for cost in costs_list:
-                        datasql = (0, "0", 0, 0, cost, "0")
+                        datasql = (0, "0", "0", "0", cost, "0")
                         insert_sql(datasql)
 
                     print("Operation successfully\n")
                     reset_categories = "0"
+
+                elif reset_categories == "0":
+                    break
 
                 else:
                     print("Invalid Input")
@@ -395,6 +415,9 @@ while select_class != "0":
             print("invalid Input")
 
         select_class = show_classes(chosen_month_number)
+
+    elif select_class == "0":
+        break
 
     else:
         print("Invalid Input")
@@ -419,7 +442,8 @@ cost_data = get_costs_sql()
 for cost in cost_data:
     for col, row, month, index in months:
         if cost[1] == month:
-            costs_per_month[index] += cost[3]
+            costs_per_month[index] += Decimal(cost[3])
+            
 
 # Write salary per month in Worksheet + sort salary per months in list
 expenses_per_month = [0] * 12
@@ -428,9 +452,11 @@ salary_data = get_salary_sql()
 for salary_month in salary_data:
     for col, row, month, index in months:
         if salary_month[1] in month:
-            expenses_per_month[index] = salary_month[2]
+            expenses_per_month[index] = Decimal(salary_month[2])
             val = col + 2
-            worksheet.write_number(val, row, salary_month[2], f_grye)
+
+            var_digit = digit_correct(salary_month[2])
+            worksheet.write(val, row, var_digit, f_grye)
 
 
 # Sort costs by months and write them in the right place in the Xlsx document
@@ -441,7 +467,7 @@ colorlist = [f_darkgreen, f_yellow, f_purple, f_darkred, f_deeppurple, f_pinkred
 startposold = 5
 startpos = 5
 count = 0
-# Get length of colorlist
+# Get length of color list
 length = len(colorlist) - 1
 
 for cost in costs_list:
@@ -470,7 +496,9 @@ for cost in costs_list:
             for col, row, month, index in months:
                 val = startposlist[index]
                 if cost_sql[1] in month:
-                    worksheet.write_number(val, row, cost_sql[3], color)
+
+                    var_digit = digit_correct(cost_sql[3])
+                    worksheet.write(val, row, var_digit, color)
                     worksheet.write_comment(val, row, cost_sql[5], c_white)
 
                     # Increase the position +1 at the right position in list
@@ -493,13 +521,16 @@ for cost in costs_list:
             startposold = startpos
 
         startposlist = [startpos] * 12
+
         for cost_sql in category_data:
 
             for col, row, month, index in months:
                 val = startposlist[index]
                 if cost_sql[1] in month:
-                    worksheet.write_number(val, row, cost_sql[3], color)
+                    var_digit = digit_correct(cost_sql[3])
+                    worksheet.write(val, row, var_digit, color)
                     worksheet.write_comment(val, row, cost_sql[5], c_white)
+
                     startposlist[index] = val + 1
 
             startpos = max(startposlist)
@@ -511,7 +542,7 @@ for cost in costs_list:
     count += 1
 
 # Calculate the difference between income and costs using numpy
-difference_per_month = np.array(expenses_per_month) - np.array(costs_per_month)
+difference_per_month = np.subtract(np.array(expenses_per_month), np.array(costs_per_month))
 
 # Write sum up and difference per month in the worksheet
 if startpos == startposold:
@@ -521,15 +552,18 @@ if startpos == startposold:
     worksheet.write(startpos + 3, 1, "Difference", cell_format11)
 
     for col, row, month, index in months:
-        worksheet.write_number(startpos + 2, row, costs_per_month[index], f_orange)
+        var_digit = digit_correct(costs_per_month[index])
+        worksheet.write(startpos + 2, row, var_digit, f_orange)
 
     # Check if difference between income and cost are positive or negative
     for col, row, month, index in months:
         if difference_per_month[index] >= 0:
-            worksheet.write_number(startpos + 3, row, difference_per_month[index], f_green)
+            var_digit = digit_correct(difference_per_month[index])
+            worksheet.write(startpos + 3, row, var_digit, f_green)
 
         else:
-            worksheet.write_number(startpos + 3, row, difference_per_month[index], f_red)
+            var_digit = digit_correct(difference_per_month[index])
+            worksheet.write(startpos + 3, row, var_digit, f_red)
 
 else:
     worksheet.write(startpos + 1, 0, "Calculation", cell_format14)
@@ -538,26 +572,18 @@ else:
 
     for i in expenses_per_month:
         for col, row, month, index in months:
-            worksheet.write_number(startpos + 2, row, costs_per_month[index], f_orange)
+            var_digit = digit_correct(costs_per_month[index])
+            worksheet.write(startpos + 2, row, var_digit, f_orange)
 
     for i in difference_per_month:
         for col, row, month, index in months:
             if difference_per_month[index] >= 0:
-                worksheet.write_number(startpos + 3, row, difference_per_month[index], f_green)
+                var_digit = digit_correct(difference_per_month[index])
+                worksheet.write(startpos + 3, row, var_digit, f_green)
 
             else:
-                worksheet.write_number(startpos + 3, row, difference_per_month[index], f_red)
-
-# Print entries from database legible in terminal
-salary_data = get_salary_sql()
-for salary_month in salary_data:
-    print("Salary in " + salary_month[1] + " was: " + str(salary_month[2]) + "€")
-
-print()
-
-costs_data = get_costs_sql()
-for cost_month in costs_data:
-    print("Costs for " + cost_month[4] + " in " + cost_month[1] + " was: " + str(cost_month[3]) + "€")
+                var_digit = digit_correct(difference_per_month[index])
+                worksheet.write(startpos + 3, row, var_digit, f_red)
 
 # Close workbook and write changes
 workbook.close()

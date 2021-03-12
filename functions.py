@@ -1,4 +1,5 @@
 import sqlite3
+import string
 
 
 def show_classes(chosen_month_number):
@@ -29,6 +30,65 @@ def show_classes(chosen_month_number):
         return select_class
 
 
+def check_number_input(number_input):
+    if number_input.find(".") == -1:
+        number_input += "."
+
+    if number_input != "0" and number_input != "" and number_input != ".":
+        if len(number_input.rsplit('.')[-1]) >= 3:
+            print("Too many digits after decimal or space in input. Insert was not saved.\n")
+
+            number_input = "0"
+            return number_input
+
+        else:
+            number_input = number_input.strip()
+            number_check = ""
+            count = 0
+
+            for number in number_input:
+
+                if number in (string.digits + "."):
+
+                    if number == "." and count <= 1:
+                        count += 1
+                        number_check += number
+
+                    elif count > 1:
+                        number_check = "0"
+
+                    else:
+                        number_check += number
+
+            if number_input == number_check and number_check != "0":
+                return number_input
+
+            else:
+                print("Invalid digits in your input\n")
+                number_input = "0"
+                return number_input
+
+    else:
+        print("Input of [" + number_input + "] is invalid.\n")
+        number_input = "0"
+        return number_input
+
+
+def digit_correct(var_digit):
+    var_digit = str(var_digit)
+
+    split_digit = len(var_digit.rsplit(".")[-1])
+    if split_digit == 2:
+        var_digit += "€"
+    elif split_digit == 1:
+        var_digit += "0€"
+
+    elif split_digit == 0:
+        var_digit += "00€"
+
+    return var_digit
+
+
 # Database to save all changes
 def database():
     # Connect to database and create cursor
@@ -39,8 +99,8 @@ def database():
     c.execute("""CREATE TABLE IF NOT EXISTS data (
             id_item INTEGER,
             month TEXT,
-            salary INTEGER,
-            expenses INTEGER,
+            salary TEXT,
+            expenses TEXT,
             class_expenses TEXT,
             commentary TEXT
         )""")
@@ -99,7 +159,7 @@ def get_category_sql():
     c = conn.cursor()
 
     # Select all data from database
-    c.execute("SELECT class_expenses FROM data WHERE expenses=0 AND salary=0")
+    c.execute("SELECT class_expenses FROM data WHERE expenses='0' AND salary='0'")
     category_sql = c.fetchall()
 
     conn.close()
@@ -114,7 +174,7 @@ def get_costs_sql():
     c = conn.cursor()
 
     # Select all data from database
-    c.execute("SELECT * FROM data WHERE expenses > 0")
+    c.execute("SELECT * FROM data WHERE expenses!='0'")
     costs_data = c.fetchall()
 
     conn.close()
@@ -129,7 +189,7 @@ def get_salary_sql():
     c = conn.cursor()
 
     # Select all entries which belong to salary
-    c.execute("SELECT * FROM data WHERE salary > 0")
+    c.execute("SELECT * FROM data WHERE salary!='0'")
     salary_data = c.fetchall()
 
     conn.close()
@@ -147,7 +207,7 @@ def get_salary_month_sql():
     c = conn.cursor()
 
     # Select all entries which belong to salary
-    c.execute("SELECT month FROM data WHERE salary > 0")
+    c.execute("SELECT month FROM data WHERE salary!='0'")
     months_used = c.fetchall()
 
     # Add the entries to the set
@@ -176,7 +236,7 @@ def update_salary_sql(income_month, chosen_month_name):
 def get_expense_by_category(cost):
     conn = sqlite3.connect(r"database\database.db")
     c = conn.cursor()
-    sql_query = "SELECT * FROM data WHERE class_expenses=? AND expenses > 0"
+    sql_query = "SELECT * FROM data WHERE class_expenses=? AND expenses!='0'"
     c.execute(sql_query, (cost,))
     category_data = c.fetchall()
     conn.commit()
