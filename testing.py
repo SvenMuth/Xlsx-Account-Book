@@ -12,9 +12,11 @@ def test(months, costs_list, repeat, id_item):
         list_of_months.append(month)
         # Check if there are any entries for salary per month
         if len(salary_data) == 0:
-            income = random.randint(2500, 3000)
+            income = random.uniform(2500.0, 3000.0)
+            income = str("{:.2f}".format(income))
+
             id_item += 1
-            datasql = (id_item, month, income, 0, "0", "0")
+            datasql = (id_item, month, income, "0", "0", "0")
             insert_sql(datasql)
 
 # Create a numerous variety of expanses and write them to database
@@ -23,8 +25,10 @@ def test(months, costs_list, repeat, id_item):
     while i < repeat:
         chosen_month_name = list_of_months[random.randint(0, 11)]
         category_expanses = costs_list[random.randint(0, length)]
-        expanses_costs = random.randint(0, 500)
+        expanses_costs = random.uniform(1.0, 500.0)
+        expanses_costs = str("{:.2f}".format(expanses_costs))
+
         id_item += 1
-        datasql = (id_item, chosen_month_name, 0, expanses_costs, category_expanses, "test")
+        datasql = (id_item, chosen_month_name, "0", expanses_costs, category_expanses, "test")
         insert_sql(datasql)
         i += 1
